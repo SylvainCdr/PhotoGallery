@@ -16,7 +16,6 @@ function Homepage() {
   
   return (
     <div className="homepage">
-       <h1>test</h1>
        <Title/>
        <UploadForm/>
        <ImageGrid setSelectedImg={setSelectedImg}/>
