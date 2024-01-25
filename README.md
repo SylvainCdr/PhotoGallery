@@ -1,7 +1,11 @@
 # PhotoGallery
 
 Une application web simple pour gérer et présenter des photos.
-Stockage : Firebase 
+L'upload des photos se fait sur firebase.
+
+
+![Alt text](<Capture d'écran 2024-01-25 173513.png>)
+![Alt text](<Capture d'écran 2024-01-25 173542.png>)
 
 
 ## Table des matières
@@ -19,9 +23,10 @@ PhotoGallery est une application web qui permet aux utilisateurs de télécharge
 
 ## Fonctionnalités
 
-- Téléchargement convivial de photos
 - Vue de la galerie pour parcourir les photos
+- Utilisation du package Framer Motion pour les animations
 - Barre de progression en temps réel pour le téléchargement des photos
+- Téléchargement de photos avec animation
 - Intégration Firebase pour le stockage et la base de données
 
 ## Mise en route
