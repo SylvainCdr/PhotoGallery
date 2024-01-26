@@ -3,18 +3,16 @@
 Une application web simple pour gérer et présenter des photos.
 L'upload des photos se fait sur firebase.
 
-
 ![Alt text](<Capture d'écran 2024-01-25 173513.png>)
 ![Alt text](<Capture d'écran 2024-01-25 173542.png>)
-
 
 ## Table des matières
 
 - [Introduction](#introduction)
 - [Fonctionnalités](#fonctionnalités)
 - [Mise en route](#mise-en-route)
-  - [Prérequis](#prérequis)
-  - [Installation](#installation)
+- [Prérequis](#prérequis)
+- [Installation](#installation)
 - [Utilisation](#utilisation)
 
 ## Introduction
@@ -48,6 +46,9 @@ Avant de commencer, assurez-vous d'avoir installé :
    cd PhotoGallery
 
    npm install
+   ```
+
+   Créer un compte sur firebase et ajoutez vos infos de connexion
 
 npm start
 
