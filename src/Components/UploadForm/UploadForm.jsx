@@ -1,6 +1,10 @@
+
+
 import React from "react";
 import { useState } from "react";
 import ProgressBar from "../ProgressBar/ProgressBar";
+import useStorage from "../../Hooks/useStorage";
+import useFirestore from "../../Hooks/useFirestore";
 
 
 // ... rest of your code ...
@@ -11,44 +15,67 @@ import ProgressBar from "../ProgressBar/ProgressBar";
 const UploadForm = () => {
   // Création de la variable d'état file qui sera initialisée à null
   const [file, setFile] = useState(null);
+  const [category, setCategory] = useState("");
   const [error, setError] = useState(null);
+
+  const { docs } = useFirestore("images");
+  const { url, progress } = useStorage(file, category);
 
 
   // Création de la variable pour les types de fichiers autorisés
-  const allowedTypes = ["image/png", "image/jpeg"];
+const types = ['image/png', 'image/jpeg'];
 
-  // Création de la fonction changeHandler
-  const changeHandler = (e) => {
+  const handleChange = (e) => {
+    const selected = e.target.files[0];
 
-    // On récupère le fichier sélectionné par l'utilisateur
-    let selected = e.target.files[0];
-
-    // Si un fichier est sélectionné et que son type est autorisé
-    if (selected && allowedTypes.includes(selected.type)) {
-        // On met à jour la variable d'état file avec le fichier sélectionné
+    if (selected && types.includes(selected.type)) {
       setFile(selected);
-      setError("");
+      setError('');
     } else {
-        setFile(null);
-setError("Please select an image file (png or jpeg)");
+      setFile(null);
+      setError('Please select an image file (png or jpeg)');
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (file && category) {
+      setFile(null);
+      setCategory('');
+    } else {
+      setError('Please select an image and category before submitting the form.');
     }
   };
 
   return (
-    <form>
-        <label>
+    <form onSubmit={handleSubmit}>
+      <div className="add-img">
+      <label>
         <span>+</span>
-      <input type="file" onChange={changeHandler} />
+        <input type="file" onChange={handleChange} />
       </label>
-      <div className="output">
-        {/* Si la variable d'état error est définie, on affiche le message d'erreur */}
-        { error && <div className="error">{ error }</div>}
-         {/* Si la variable d'état file est définie, on affiche le nom du fichier */}
-        { file && <div>{ file.name }</div>}
-  {/* Si la variable d'état file est définie, on affiche la barre de progression */}
-{ file && <ProgressBar file={file} setFile={setFile} />}
-
       </div>
+
+      <div className="add-category">
+
+        <label>Category:</label>
+        <input
+          type="text"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        />
+      </div>
+
+      <div>
+        {error && <div className="error">{error}</div>}
+        {file && <div>{file.name}</div>}
+        {file && <ProgressBar file={file} />}
+      </div>
+
+      <button type="submit">Add</button>
+
+
     </form>
   );
 };

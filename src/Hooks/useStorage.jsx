@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import { projectStorage, projectFirestore, timestamp } from "../firebase/config";
 
-const useStorage = (file) => {
+const useStorage = (file, category) => {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
   const [url, setUrl] = useState(null);
 
   useEffect(() => {
+
+    if (!file || !category) {
+      return;
+    }
     const storageRef = projectStorage.ref(file.name);
     const collectionRef = projectFirestore.collection("images");
 
@@ -30,14 +34,14 @@ const useStorage = (file) => {
         const createdAt = timestamp();
 
         // Ajouter le document uniquement après le téléchargement complet
-        collectionRef.add({ url, createdAt });
+        collectionRef.add({ url, createdAt, category });
         setUrl(url);
       }
     );
 
     // Nettoyage de l'écouteur lorsqu'il n'est plus nécessaire
     return () => uploadTask.cancel();
-  }, [file]);
+  }, [file, category]);
 
   return { progress, url, error };
 };
