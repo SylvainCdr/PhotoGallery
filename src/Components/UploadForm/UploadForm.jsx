@@ -1,29 +1,18 @@
-
-
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import useStorage from "../../Hooks/useStorage";
 import useFirestore from "../../Hooks/useFirestore";
 
-
-// ... rest of your code ...
-
-
-// Création du composant UploadForm
-// Ce composant permettra à l'utilisateur de sélectionner une image à uploader
 const UploadForm = () => {
-  // Création de la variable d'état file qui sera initialisée à null
   const [file, setFile] = useState(null);
   const [category, setCategory] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { docs } = useFirestore("images");
-  const { url, progress } = useStorage(file, category);
+  const { url, progress } = useStorage(file, category, isSubmitting);
 
-
-  // Création de la variable pour les types de fichiers autorisés
-const types = ['image/png', 'image/jpeg'];
+  const types = ['image/png', 'image/jpeg'];
 
   const handleChange = (e) => {
     const selected = e.target.files[0];
@@ -37,34 +26,46 @@ const types = ['image/png', 'image/jpeg'];
     }
   };
 
+  const handleAdd = () => {
+    // Vérifier que le fichier et la catégorie sont sélectionnés avant de soumettre
+    if (file && category) {
+      setIsSubmitting(true);
+    } else {
+      setError('Please select an image and category before submitting the form.');
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (file && category) {
+    // Soumission réelle du formulaire si le bouton "Add" a été cliqué
+    if (isSubmitting) {
       setFile(null);
       setCategory('');
-    } else {
-      setError('Please select an image and category before submitting the form.');
+      setIsSubmitting(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="add-img">
-      <label>
-        <span>+</span>
-        <input type="file" onChange={handleChange} />
-      </label>
+        <label>
+          <span>+</span>
+          <input type="file" onChange={handleChange} />
+        </label>
       </div>
 
       <div className="add-category">
-
         <label>Category:</label>
-        <input
-          type="text"
+        <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-        />
+        >
+          <option value="">Choose a category</option>
+          <option value="nature">Nature</option>
+          <option value="city">City</option>
+          <option value="people">People</option>
+        </select>
       </div>
 
       <div>
@@ -73,9 +74,8 @@ const types = ['image/png', 'image/jpeg'];
         {file && <ProgressBar file={file} />}
       </div>
 
-      <button type="submit">Add</button>
-
-
+      {/* Utiliser le type "button" pour éviter la soumission automatique du formulaire */}
+      <button type="button" onClick={handleAdd}>Add</button>
     </form>
   );
 };
